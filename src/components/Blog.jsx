@@ -27,6 +27,18 @@ const Blog = ({ blog, user }) => {
     }
   };
 
+  const handleRemove = async () => {
+    if (window.confirm("Are you sure?") == true) {
+      try {
+        blogService.setToken(user.token);
+        await blogService.remove(blog.id);
+        window.location.reload();
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+
   return (
     <div style={blogStyle}>
       <div>
@@ -41,9 +53,12 @@ const Blog = ({ blog, user }) => {
           <div>{blog.url}</div>
           <div>
             likes {blog.likes}
-            <button onClick={handleLike}>like</button>
+            {blog.user[0].username === user.username && (
+              <button onClick={handleLike}>like</button>
+            )}
           </div>
           <div>{blog.author}</div>
+          <button onClick={handleRemove}>remove</button>
         </div>
       )}
     </div>
