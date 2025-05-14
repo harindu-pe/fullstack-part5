@@ -8,6 +8,12 @@ const App = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
+  const [blogPost, setBlogPost] = useState({
+    title: "",
+    author: "",
+    url: "",
+    likes: 0,
+  });
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs));
@@ -31,6 +37,7 @@ const App = () => {
       });
       window.localStorage.setItem("loggedBlogAppUser", JSON.stringify(user));
       setUser(user);
+      blogService.setToken(user.token);
       setUsername("");
       setPassword("");
       console.log(user);
@@ -42,6 +49,25 @@ const App = () => {
   const handleLogout = () => {
     window.localStorage.removeItem("loggedBlogAppUser");
     window.location.reload();
+  };
+
+  const handleSubmitPost = async (event) => {
+    event.preventDefault();
+
+    try {
+      blogService.setToken(user.token);
+      const blog = await blogService.create(blogPost);
+      setBlogPost({
+        title: "",
+        author: "",
+        url: "",
+        likes: 0,
+      });
+      console.log(blog);
+      window.location.reload();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   if (user === null) {
@@ -80,6 +106,51 @@ const App = () => {
         {user.username} logged in <button onClick={handleLogout}>logout</button>
       </div>
       <br />
+      <form onSubmit={handleSubmitPost}>
+        <div>
+          title:
+          <input
+            type="text"
+            value={blogPost.title}
+            name="title"
+            onChange={({ target }) =>
+              setBlogPost((prevState) => ({
+                ...prevState,
+                title: target.value,
+              }))
+            }
+          />
+        </div>
+        <div>
+          author:
+          <input
+            type="text"
+            value={blogPost.author}
+            name="author"
+            onChange={({ target }) =>
+              setBlogPost((prevState) => ({
+                ...prevState,
+                author: target.value,
+              }))
+            }
+          />
+        </div>
+        <div>
+          url:
+          <input
+            type="text"
+            value={blogPost.url}
+            name="url"
+            onChange={({ target }) =>
+              setBlogPost((prevState) => ({
+                ...prevState,
+                url: target.value,
+              }))
+            }
+          />
+        </div>
+        <button type="submit">save</button>
+      </form>
       {blogs.map((blog) => (
         <Blog key={blog.id} blog={blog} />
       ))}
