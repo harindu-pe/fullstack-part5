@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import Blog from "./components/Blog";
+import Notification from "./components/Notification";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
 
@@ -14,6 +15,7 @@ const App = () => {
     url: "",
     likes: 0,
   });
+  const [notification, setNotification] = useState(null);
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs));
@@ -43,6 +45,14 @@ const App = () => {
       console.log(user);
     } catch (error) {
       console.log(error);
+      // update error message
+      setNotification({
+        message: `${error.response.data.error}`,
+        code: "error",
+      });
+      setTimeout(() => {
+        setNotification(null);
+      }, 4000);
     }
   };
 
@@ -64,9 +74,27 @@ const App = () => {
         likes: 0,
       });
       console.log(blog);
-      window.location.reload();
+      // update success message
+      setNotification({
+        message: `a new blog ${blogPost.title} by ${blogPost.author} added`,
+        code: "success",
+      });
+      setTimeout(() => {
+        setNotification(null);
+        window.location.reload();
+      }, 2000);
+      setTimeout(() => {
+        window.location.reload();
+      }, 3000);
     } catch (error) {
-      console.log(error);
+      // update error message
+      setNotification({
+        message: `${error.response.data.error}`,
+        code: "error",
+      });
+      setTimeout(() => {
+        setNotification(null);
+      }, 4000);
     }
   };
 
@@ -74,6 +102,10 @@ const App = () => {
     return (
       <div>
         <h2>Log in to application</h2>
+        <Notification
+          message={notification?.message}
+          className={notification?.code}
+        />
         <form onSubmit={handleLogin}>
           <div>
             username
@@ -102,6 +134,10 @@ const App = () => {
   return (
     <div>
       <h2>blogs</h2>
+      <Notification
+        message={notification?.message}
+        className={notification?.code}
+      />
       <div>
         {user.username} logged in <button onClick={handleLogout}>logout</button>
       </div>
