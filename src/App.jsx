@@ -66,7 +66,7 @@ const App = () => {
   const addBlogPost = async (blogObject) => {
     try {
       blogService.setToken(user.token);
-      const blog = await blogService.create(blogObject);
+      await blogService.create(blogObject);
 
       // update success message
       setNotification({
