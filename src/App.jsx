@@ -12,12 +12,6 @@ const App = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
-  const [blogPost, setBlogPost] = useState({
-    title: "",
-    author: "",
-    url: "",
-    likes: 0,
-  });
   const [notification, setNotification] = useState(null);
 
   useEffect(() => {
@@ -64,27 +58,18 @@ const App = () => {
     window.location.reload();
   };
 
-  const handleSubmitPost = async (event) => {
-    event.preventDefault();
-
+  const addBlogPost = async (blogObject) => {
     try {
       blogService.setToken(user.token);
-      const blog = await blogService.create(blogPost);
-      setBlogPost({
-        title: "",
-        author: "",
-        url: "",
-        likes: 0,
-      });
-      console.log(blog);
+      const blog = await blogService.create(blogObject);
+
       // update success message
       setNotification({
-        message: `a new blog ${blogPost.title} by ${blogPost.author} added`,
+        message: `a new blog ${blogObject.title} by ${blogObject.author} added`,
         code: "success",
       });
       setTimeout(() => {
         setNotification(null);
-        window.location.reload();
       }, 2000);
       setTimeout(() => {
         window.location.reload();
@@ -92,7 +77,7 @@ const App = () => {
     } catch (error) {
       // update error message
       setNotification({
-        message: `${error.response.data.error}`,
+        message: `Cannot be created`,
         code: "error",
       });
       setTimeout(() => {
@@ -127,11 +112,7 @@ const App = () => {
       <br />
 
       <Togglable buttonLabel="new blog post">
-        <BlogForm
-          blogPost={blogPost}
-          setBlogPost={setBlogPost}
-          handleSubmitPost={handleSubmitPost}
-        />
+        <BlogForm createBlogPost={addBlogPost} />
       </Togglable>
 
       {blogs.map((blog) => (
