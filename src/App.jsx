@@ -3,6 +3,9 @@ import Blog from "./components/Blog";
 import Notification from "./components/Notification";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
+import LoginForm from "./components/LoginForm";
+import BlogForm from "./components/BlogForm";
+import Togglable from "./components/Togglable";
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
@@ -100,34 +103,14 @@ const App = () => {
 
   if (user === null) {
     return (
-      <div>
-        <h2>Log in to application</h2>
-        <Notification
-          message={notification?.message}
-          className={notification?.code}
-        />
-        <form onSubmit={handleLogin}>
-          <div>
-            username
-            <input
-              type="text"
-              value={username}
-              name="Username"
-              onChange={({ target }) => setUsername(target.value)}
-            />
-          </div>
-          <div>
-            password
-            <input
-              type="password"
-              value={password}
-              name="Password"
-              onChange={({ target }) => setPassword(target.value)}
-            />
-          </div>
-          <button type="submit">login</button>
-        </form>
-      </div>
+      <LoginForm
+        username={username}
+        password={password}
+        handleUsernameChange={({ target }) => setUsername(target.value)}
+        handlePasswordChange={({ target }) => setPassword(target.value)}
+        handleLogin={handleLogin}
+        notification={notification}
+      />
     );
   }
 
@@ -142,51 +125,15 @@ const App = () => {
         {user.username} logged in <button onClick={handleLogout}>logout</button>
       </div>
       <br />
-      <form onSubmit={handleSubmitPost}>
-        <div>
-          title:
-          <input
-            type="text"
-            value={blogPost.title}
-            name="title"
-            onChange={({ target }) =>
-              setBlogPost((prevState) => ({
-                ...prevState,
-                title: target.value,
-              }))
-            }
-          />
-        </div>
-        <div>
-          author:
-          <input
-            type="text"
-            value={blogPost.author}
-            name="author"
-            onChange={({ target }) =>
-              setBlogPost((prevState) => ({
-                ...prevState,
-                author: target.value,
-              }))
-            }
-          />
-        </div>
-        <div>
-          url:
-          <input
-            type="text"
-            value={blogPost.url}
-            name="url"
-            onChange={({ target }) =>
-              setBlogPost((prevState) => ({
-                ...prevState,
-                url: target.value,
-              }))
-            }
-          />
-        </div>
-        <button type="submit">save</button>
-      </form>
+
+      <Togglable buttonLabel="new blog post">
+        <BlogForm
+          blogPost={blogPost}
+          setBlogPost={setBlogPost}
+          handleSubmitPost={handleSubmitPost}
+        />
+      </Togglable>
+
       {blogs.map((blog) => (
         <Blog key={blog.id} blog={blog} />
       ))}
