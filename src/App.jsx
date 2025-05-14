@@ -15,7 +15,12 @@ const App = () => {
   const [notification, setNotification] = useState(null);
 
   useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs));
+    const getBlogs = async () => {
+      const blogsArray = await blogService.getAll();
+      const sortedBlogs = [...blogsArray].sort((a, b) => b.likes - a.likes);
+      setBlogs(sortedBlogs);
+    };
+    getBlogs();
   }, []);
 
   useEffect(() => {
