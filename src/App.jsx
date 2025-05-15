@@ -91,6 +91,21 @@ const App = () => {
     }
   };
 
+  const updateLike = async (blog) => {
+    try {
+      blogService.setToken(user.token);
+      await blogService.update(blog.id, {
+        likes: blog.likes + 1,
+        author: blog.author,
+        title: blog.title,
+        url: blog.url,
+      });
+      window.location.reload();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   if (user === null) {
     return (
       <LoginForm
@@ -121,7 +136,7 @@ const App = () => {
       </Togglable>
 
       {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} user={user} />
+        <Blog key={blog.id} blog={blog} user={user} updateLike={updateLike} />
       ))}
     </div>
   );

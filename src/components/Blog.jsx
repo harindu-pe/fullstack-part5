@@ -1,7 +1,7 @@
 import { useState } from "react";
 import blogService from "../services/blogs";
 
-const Blog = ({ blog, user }) => {
+const Blog = ({ blog, user, updateLike }) => {
   const [visible, setVisible] = useState(false);
   console.log(blog);
 
@@ -14,18 +14,7 @@ const Blog = ({ blog, user }) => {
   };
 
   const handleLike = async () => {
-    try {
-      blogService.setToken(user.token);
-      await blogService.update(blog.id, {
-        likes: blog.likes + 1,
-        author: blog.author,
-        title: blog.title,
-        url: blog.url,
-      });
-      window.location.reload();
-    } catch (error) {
-      console.log(error);
-    }
+    updateLike(blog);
   };
 
   const handleRemove = async () => {
