@@ -3,6 +3,7 @@ import blogService from "../services/blogs";
 
 const Blog = ({ blog, user }) => {
   const [visible, setVisible] = useState(false);
+  console.log(blog);
 
   const blogStyle = {
     paddingTop: 10,
