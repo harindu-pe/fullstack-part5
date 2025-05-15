@@ -31,6 +31,7 @@ const BlogForm = ({ createBlogPost }) => {
             type="text"
             value={blogPost.title}
             name="title"
+            placeholder="title"
             onChange={({ target }) =>
               setBlogPost((prevState) => ({
                 ...prevState,
@@ -45,6 +46,7 @@ const BlogForm = ({ createBlogPost }) => {
             type="text"
             value={blogPost.author}
             name="author"
+            placeholder="author"
             onChange={({ target }) =>
               setBlogPost((prevState) => ({
                 ...prevState,
@@ -59,6 +61,7 @@ const BlogForm = ({ createBlogPost }) => {
             type="text"
             value={blogPost.url}
             name="url"
+            placeholder="url"
             onChange={({ target }) =>
               setBlogPost((prevState) => ({
                 ...prevState,
